@@ -10,11 +10,11 @@ $(function() {
       $(this).toggleClass('cell-flag');
       return false;
     });
-  }
+  };
 
   var clearCells = function() {
     cells.removeClass('cell-bomb cell-flag');
-  }
+  };
 
   /*
   Determine number of bombs, and randomly add them.
