@@ -1,15 +1,33 @@
-.row {
-  /*
-  Floated elements are "lifted out" of the page, so that
-  their parent element forgets that it needs to take up one
-  whole row. Saying `clear: both` reminds it, clearing space
-  on both sides so that it again takes up the row.
-  This is called a "clearfix", and there is usually a "clearfix"
-  class (supplied in e.g. Bootstrap), that you can just apply
-  to elements that you want to float things inside.
-  */
-  clear: both;
+/*
+When we give something a width or height, CSS should
+listen to us and include the padding in that, instead of
+adding it.
+*/
+* {
+  box-sizing: border-box;
 }
+
+/*
+Floated elements are "lifted out" of the page, so that
+their parent element forgets that it needs to take up one
+whole row. Saying `clear: both` reminds it, clearing space
+on both sides so that it again takes up the row.
+This is called a "clearfix", and there is usually a "clearfix"
+class (supplied in e.g. Bootstrap), that you can just apply
+to elements that you want to float things inside.
+*/
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+.clearfix:after {
+    clear: both;
+}
+.clearfix {
+    *zoom: 1;
+}
+
 .cell {
   background: #ccc;
   border: 1px solid #666;
@@ -22,12 +40,23 @@
   they will be on the same row, left-aligned.
   */
   float: left;
+
+  text-align: center;
+  font-size: 20px;
+  padding: 10px;
+  color: #222;
 }
 /*
 Types of `cell`, so we only write the properties
 that we add to a regular `cell`.
 */
 .cell.cell-bomb {
+
+}
+.cell.cell-revealed {
+  
+}
+.cell.cell-bomb-visible {
   background: #dd0000;
 }
 .cell.cell-flag {
