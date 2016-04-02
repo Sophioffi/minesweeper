@@ -2,6 +2,16 @@ $(function() {
   // Remember all the cells in the page.
   var cells = $('.cell');
 
+  /*
+  Right click: toggle `cell-flag` class.
+  */
+  var bindCells = function() {
+    cells.bind("contextmenu", function() {
+      $(this).toggleClass('cell-flag');
+      return false;
+    });
+  }
+
   var clearCells = function() {
     cells.removeClass('cell-bomb cell-flag');
   }
@@ -24,14 +34,8 @@ $(function() {
   };
 
   var init = function() {
-    // For each of the cells, toggle the 'cell-flag' class on click.
-    cells.click(function() {
-      // Get the cell and toggle the class.
-      $(this).toggleClass('cell-flag');
-    });
-
+    bindCells();
     clearCells();
-
     distributeBombs();
   };
 
