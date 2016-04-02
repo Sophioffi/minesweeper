@@ -1,0 +1,35 @@
+.row {
+  /*
+  Floated elements are "lifted out" of the page, so that
+  their parent element forgets that it needs to take up one
+  whole row. Saying `clear: both` reminds it, clearing space
+  on both sides so that it again takes up the row.
+  This is called a "clearfix", and there is usually a "clearfix"
+  class (supplied in e.g. Bootstrap), that you can just apply
+  to elements that you want to float things inside.
+  */
+  clear: both;
+}
+.cell {
+  background: #ccc;
+  border: 1px solid #666;
+  height: 50px;
+  width: 50px;
+  /*
+  Floating means that we want elements to be on either
+  side of each other (on the same row). If we have three
+  elements that are siblings, and give them all `float: left`,
+  they will be on the same row, left-aligned.
+  */
+  float: left;
+}
+/*
+Types of `cell`, so we only write the properties
+that we add to a regular `cell`.
+*/
+.cell.cell-bomb {
+  background: #dd0000;
+}
+.cell.cell-flag {
+  background: #f6f600;
+}
