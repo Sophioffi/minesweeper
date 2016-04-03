@@ -11,10 +11,11 @@ $(function() {
   // The current state of the game.
   var _state = _States.playing;
   var _gameSize = 10;
+  var _nrBombs = Math.round(_gameSize * _gameSize / 3);
 
   var revealCell = function(id, cell) {
     if ($(cell).hasClass('cell-revealed')) { return; }
-    
+
     $(cell).addClass('cell-revealed');
     $(cell).text($(cell).attr('data-nr-bombs'));
 
@@ -33,17 +34,23 @@ $(function() {
   */
   var bindCells = function() {
     _cells.click(function(event) {
-      var id = _cells.index(this);
+      if (_state != _States.playing) { return; }
       if (event.which != 1) { return; }
+      var id = _cells.index(this);
       if ($(this).hasClass('cell-bomb')) {
         $('.cell-bomb').addClass('cell-bomb-visible');
         _state = _States.lost;
         $('#message').text('Game Over!');
       } else {
         revealCell(id, this);
+        if ($('.cell-revealed').length == _gameSize * _gameSize - _nrBombs) {
+          _state = _States.won;
+          $('#message').text('You Win!');
+        }
       }
     });
     _cells.bind('contextmenu', function() {
+      if (_state != _States.playing) { return false; }
       $(this).toggleClass('cell-flag');
       return false;
     });
@@ -57,9 +64,8 @@ $(function() {
   Determine number of bombs, and randomly add them.
   */
   var distributeBombs = function() {
-    var nrBombs = Math.round(_gameSize * _gameSize / 3);
     var nrBombsAdded = 0;
-    while (nrBombsAdded < nrBombs) {
+    while (nrBombsAdded < _nrBombs) {
       var randomIndex = Math.round(Math.random() * (_gameSize * _gameSize));
       var randomCell = _cells.eq(randomIndex);
       if (!randomCell.hasClass('cell-bomb')) {
@@ -137,7 +143,7 @@ $(function() {
         }
       });
       if (!$(cell).hasClass('cell-bomb')) {
-        $(cell).attr('data-nr-bombs', nrBombs)
+        $(cell).attr('data-nr-bombs', nrBombs);
       };
     });
   }
