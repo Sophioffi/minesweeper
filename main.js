@@ -32,7 +32,7 @@ $(function() {
     Otherwise, ...
   Right click: toggle `cell-flag` class.
   */
-  var bindCells = function() {
+  var bindEvents = function() {
     _cells.click(function(event) {
       if (_state != _States.playing) { return; }
       if (event.which != 1) { return; }
@@ -54,10 +54,13 @@ $(function() {
       $(this).toggleClass('cell-flag');
       return false;
     });
+    $('#restart-button').click(startGame);
   };
 
   var clearCells = function() {
-    _cells.removeClass('cell-bomb cell-flag');
+    _cells.removeClass('cell-bomb cell-flag cell-revealed cell-bomb-visible');
+    _cells.removeAttr('data-nr-bombs');
+    _cells.text('');
   };
 
   /*
@@ -146,13 +149,19 @@ $(function() {
         $(cell).attr('data-nr-bombs', nrBombs);
       };
     });
-  }
+  };
 
-  var init = function() {
-    bindCells();
+  var startGame = function() {
     clearCells();
     distributeBombs();
     distributeNumbers();
+    _state = _States.playing;
+    $('#message').text('Good Luck!');
+  };
+
+  var init = function() {
+    bindEvents();
+    startGame();
   };
 
   init();
