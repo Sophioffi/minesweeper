@@ -17,6 +17,7 @@ $(function() {
     if ($(cell).hasClass('cell-revealed')) { return; }
 
     $(cell).addClass('cell-revealed');
+    $(cell).removeClass('cell-flag');
     $(cell).text($(cell).attr('data-nr-bombs'));
 
     if ($(cell).attr('data-nr-bombs') == 0) {
@@ -37,6 +38,7 @@ $(function() {
       if (_state != _States.playing) { return; }
       if (event.which != 1) { return; }
       var id = _cells.index(this);
+      if ($(this).hasClass('cell-flag')) { return; }
       if ($(this).hasClass('cell-bomb')) {
         $('.cell-bomb').addClass('cell-bomb-visible');
         _state = _States.lost;
@@ -51,6 +53,7 @@ $(function() {
     });
     _cells.bind('contextmenu', function() {
       if (_state != _States.playing) { return false; }
+      if ($(this).hasClass('cell-revealed')) { return false; }
       $(this).toggleClass('cell-flag');
       return false;
     });

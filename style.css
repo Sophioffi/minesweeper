@@ -33,8 +33,15 @@ to elements that you want to float things inside.
 }
 
 .cell {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  cursor: default;
+
   background-color: #9AABAF;
-  border: 1px solid #535C5F;
+  border: 3px outset #7F8C90;
   height: 50px;
   width: 50px;
   /*
@@ -58,6 +65,7 @@ that we add to a regular `cell`.
 
 }
 .cell.cell-revealed {
+  border: 1px solid #7F8C90;
 
 }
 .cell.cell-bomb-visible {
