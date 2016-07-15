@@ -3,11 +3,13 @@ When we give something a width or height, CSS should
 listen to us and include the padding in that, instead of
 adding it.
 */
+
 * {
   box-sizing: border-box;
 }
 
-body {
+body 
+{
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -21,18 +23,22 @@ class (supplied in e.g. Bootstrap), that you can just apply
 to elements that you want to float things inside.
 */
 .clearfix:before,
-.clearfix:after {
+.clearfix:after 
+{
     content: " ";
     display: table;
 }
-.clearfix:after {
+.clearfix:after 
+{
     clear: both;
 }
-.clearfix {
+.clearfix 
+{
     *zoom: 1;
 }
 
-.cell {
+.cell 
+{
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -41,9 +47,9 @@ to elements that you want to float things inside.
   cursor: default;
 
   background-color: #9AABAF;
-  border: 3px outset #7F8C90;
-  height: 50px;
-  width: 50px;
+  border: 3px outset #FFC0CB;
+  height: 200px;
+  width: 200px;
   /*
   Floating means that we want elements to be on either
   side of each other (on the same row). If we have three
@@ -53,30 +59,17 @@ to elements that you want to float things inside.
   float: left;
 
   text-align: center;
-  font-size: 25px;
-  padding: 10px;
+  font-size: 16px;
+  padding: 0px;
   color: #222;
 }
 /*
 Types of `cell`, so we only write the properties
 that we add to a regular `cell`.
 */
-.cell.cell-bomb {
 
-}
-.cell.cell-revealed {
-  border: 1px solid #7F8C90;
+.cell.cell-revealed 
+{
+  border: 3px solid #F6F6F6;
 
-}
-.cell.cell-bomb-visible {
-  background-image: url('bomb.png');
-  background-repeat: no-repeat;
-  background-size: 50% 50%;
-  background-position: 50% 50%;
-}
-.cell.cell-flag {
-  background-image: url('flag.png');
-  background-repeat: no-repeat;
-  background-size: 50% 50%;
-  background-position: 50% 50%;
 }

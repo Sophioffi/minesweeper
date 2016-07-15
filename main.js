@@ -1,170 +1,48 @@
 $(function() {
   // All the cells in the page.
   var _cells = $('.cell');
-
-  // The possible states of the game.
-  var _States = {};
-  _States.playing = 1;
-  _States.lost = 2;
-  _States.won = 3;
-
-  // The current state of the game.
-  var _state = _States.playing;
-  var _gameSize = 10;
-  var _nrBombs = Math.round(_gameSize * _gameSize / 3);
+  var _gameSize = 6;
+  var _allCells = 36;
 
   var revealCell = function(id, cell) {
     if ($(cell).hasClass('cell-revealed')) { return; }
 
     $(cell).addClass('cell-revealed');
-    $(cell).removeClass('cell-flag');
-    $(cell).text($(cell).attr('data-nr-bombs'));
-
-    if ($(cell).attr('data-nr-bombs') == 0) {
-      processNeighbours(id, function(neighbourId, neighbourCell) {
-        revealCell(neighbourId, neighbourCell);
-      });
-    }
+    $(cell).css('border', $(cell).css('backgroundColor'));
+//    $(cell).css('border', '3px solid #f6f6f6');
   }
 
-  /*
-  Left click:
-    If the cell is a bomb, show a message ending the game.
-    Otherwise, ...
-  Right click: toggle `cell-flag` class.
-  */
-  var bindEvents = function() {
+  var bindEvents = function() 
+  {
     _cells.click(function(event) {
-      if (_state != _States.playing) { return; }
-      if (event.which != 1) { return; }
       var id = _cells.index(this);
-      if ($(this).hasClass('cell-flag')) { return; }
-      if ($(this).hasClass('cell-bomb')) {
-        $('.cell-bomb').addClass('cell-bomb-visible');
-        _state = _States.lost;
-        $('#message').text('Game Over!');
-      } else {
-        revealCell(id, this);
-        if ($('.cell-revealed').length == _gameSize * _gameSize - _nrBombs) {
-          _state = _States.won;
-          $('#message').text('You Win!');
-        }
-      }
+      revealCell(id, this);
     });
     _cells.bind('contextmenu', function() {
-      if (_state != _States.playing) { return false; }
-      if ($(this).hasClass('cell-revealed')) { return false; }
-      $(this).toggleClass('cell-flag');
       return false;
     });
-    $('#restart-button').click(startGame);
   };
 
-  var clearCells = function() {
-    _cells.removeClass('cell-bomb cell-flag cell-revealed cell-bomb-visible');
-    _cells.removeAttr('data-nr-bombs');
-    _cells.text('');
+  var distributeColour = function() 
+  {
+    var colourTable = ["52000C", "830014", "941A20", "8C0F28", "DD103F", "B4082C", "D1002D", "D6004D", "FB0007", "DC2B29"];
+    var bordercolourTable = ["52000C", "830014", "941A20", "8C0F28", "DD103F", "B4082C", "D1002D", "D6004D", "FB0007", "DC2B29"]
+    var cusid_ele = document.getElementsByClassName('cell');
+    for (var i = 0; i < cusid_ele.length; ++i) 
+    {
+      var item = cusid_ele[i]; 
+      var randomIndex = Math.round(Math.random() * 9);
+      item.style.backgroundColor = '#' + colourTable[randomIndex]; 
+      item.style.border = '3px outset '+ '#' + bordercolourTable[randomIndex]
+    };
   };
+  
 
-  /*
-  Determine number of bombs, and randomly add them.
-  */
-  var distributeBombs = function() {
-    var nrBombsAdded = 0;
-    while (nrBombsAdded < _nrBombs) {
-      var randomIndex = Math.round(Math.random() * (_gameSize * _gameSize));
-      var randomCell = _cells.eq(randomIndex);
-      if (!randomCell.hasClass('cell-bomb')) {
-        randomCell.addClass('cell-bomb');
-        nrBombsAdded++;
-      }
-    }
-  };
 
-  /*
-  Find cell with given id, then run a certain function (`thingToDo`)
-  for each of its neighbours, supplying that neighbour's id and cell.
-  */
-  var processNeighbours = function(id, thingToDo) {
-    var cell = _cells.eq(id);
-
-    var tmId = id - _gameSize;
-    var bmId = id + _gameSize;
-
-    /*
-    If we're on the left edge, set the left cell ids
-    to -1, so that we don't consider them.
-    Left edge cell: id multiple of game size
-    */
-    if (id % _gameSize == 0) {
-      var tlId = -1;
-      var mlId = -1;
-      var blId = -1;
-    } else {
-      var tlId = tmId - 1;
-      var mlId = id - 1;
-      var blId = bmId - 1;
-    }
-
-    /*
-    Same for the right edge.
-    Right edge cell: subtracting `gameSize - 1` makes it
-    a left edge cell.
-    */
-    if ((id - (_gameSize - 1)) % _gameSize == 0) {
-      var trId = -1;
-      var mrId = -1;
-      var brId = -1;
-    } else {
-      var trId = tmId + 1;
-      var mrId = id + 1;
-      var brId = bmId + 1;
-    }
-
-    var idsToCheck = [
-      tlId, tmId, trId,
-      mlId, mrId,
-      blId, bmId, brId
-    ];
-
-    for (idToCheck of idsToCheck) {
-      if (idToCheck < 0 || idToCheck > _gameSize * _gameSize) {
-        continue;
-      }
-      var cellToCheck = _cells.eq(idToCheck);
-      thingToDo(idToCheck, cellToCheck);
-    }
-  };
-
-  /*
-  For each cell, look at its neighbours, and count how many bombs there
-  are. Remember this in the cell.
-  */
-  var distributeNumbers = function() {
-    _cells.each(function(id, cell) {
-      var nrBombs = 0;
-      processNeighbours(id, function(neighbourId, neighbourCell) {
-        if (neighbourCell.hasClass('cell-bomb')) {
-          nrBombs++;
-        }
-      });
-      if (!$(cell).hasClass('cell-bomb')) {
-        $(cell).attr('data-nr-bombs', nrBombs);
-      };
-    });
-  };
-
-  var startGame = function() {
-    clearCells();
-    distributeBombs();
-    distributeNumbers();
-    _state = _States.playing;
-    $('#message').text('Good Luck!');
-  };
-
-  var init = function() {
+  var init = function() 
+  {
     bindEvents();
-    startGame();
+    distributeColour();
   };
 
   init();
